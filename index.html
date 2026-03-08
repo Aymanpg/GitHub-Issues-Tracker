@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Issues Tracker – Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#eef0f3] min-h-screen flex items-center justify-center font-sans px-4">
+
+  <div class="bg-white rounded-2xl shadow-lg flex flex-col justify-center text-center"
+       style="width:520px; height:801px; padding: 0 56px;">
+
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+       <img src="assets/github-logo.png" alt="GitHub Logo" class="w-20 h-20 rounded-full object-cover">
+      
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-[#1a1a2e] tracking-tight mb-2">GitHub Issues Tracker</h1>
+    <p class="text-sm text-gray-400 mb-8">Sign in to manage your issues</p>
+
+    <!-- Error -->
+    <div id="errorMsg" class="hidden text-left bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2.5 mb-4">
+      Invalid username or password. Please try again.
+    </div>
+
+    <!-- Username -->
+    <div class="text-left mb-5">
+      <label class="block text-sm font-semibold text-[#2d2d3a] mb-2">Username</label>
+      <input
+        id="username"
+        type="text"
+        placeholder="Enter Username"
+        autocomplete="username"
+        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-[#2d2d3a] placeholder-gray-300 outline-none focus:border-indigo-500 transition-colors"
+      />
+      <p class="mt-2 text-xs font-medium text-indigo-600">Default: admin</p>
+    </div>
+
+    <!-- Password -->
+    <div class="text-left mb-7">
+      <label class="block text-sm font-semibold text-[#2d2d3a] mb-2">Password</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter Password"
+        autocomplete="current-password"
+        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-[#2d2d3a] placeholder-gray-300 outline-none focus:border-indigo-500 transition-colors"
+      />
+      <p class="mt-2 text-xs font-medium text-indigo-600">Default: admin123</p>
+    </div>
+
+    <!-- Sign In Button -->
+    <button
+      onclick="handleLogin()"
+      class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-base py-3.5 rounded-xl transition-all duration-150 cursor-pointer"
+    >
+      Sign In
+    </button>
+
+    <!-- Divider -->
+    <div class="flex items-center gap-3 my-6 text-gray-300 text-sm">
+      <div class="flex-1 h-px bg-gray-100"></div>
+      OR
+      <div class="flex-1 h-px bg-gray-100"></div>
+    </div>
+
+    <!-- Demo Credentials -->
+    <p class="text-sm text-gray-400 mb-3">Demo Credentials:</p>
+    <div class="bg-gray-50 border border-gray-100 rounded-xl px-6 py-4 text-sm text-[#2d2d3a] leading-8">
+      <span class="font-bold">Username:</span> admin<br/>
+      <span class="font-bold">Password:</span> admin123
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
+    function handleLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (username === 'admin' && password === 'admin123') {
+        errorMsg.classList.add('hidden');
+        alert('Login successful! Redirecting to main page...');
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
