@@ -12,8 +12,6 @@
     }
   </script>
   <style>
-    .card-open  { border-top: 3px solid #22c55e; }
-    .card-closed{ border-top: 3px solid #a855f7; }
     .spinner {
       border: 3px solid #e5e7eb;
       border-top-color: #6366f1;
@@ -32,12 +30,10 @@
   <!-- NAVBAR -->
   <nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-      <!-- Logo / Name -->
       <div class="flex items-center gap-2">
         <img src="../assets/github-logo.png" alt="GitHub" class="w-7 h-7 rounded-full object-cover">
         <span class="font-bold text-gray-800 text-sm sm:text-base">GitHub Issues Tracker</span>
       </div>
-      <!-- Search + Button -->
       <div class="flex items-center gap-2">
         <div class="relative hidden sm:block">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +44,6 @@
         <button onclick="doSearch()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors hidden sm:block">
           + New Issue
         </button>
-        <!-- Mobile search icon -->
         <button class="sm:hidden p-1" onclick="toggleMobileSearch()">
           <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
@@ -56,7 +51,6 @@
         </button>
       </div>
     </div>
-    <!-- Mobile search bar -->
     <div id="mobileSearch" class="hidden sm:hidden px-4 pb-3">
       <div class="flex gap-2">
         <input id="mobileSearchInput" type="text" placeholder="Search issues..." class="flex-1 pl-4 pr-4 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-indigo-400"/>
@@ -65,68 +59,54 @@
     </div>
   </nav>
 
-
-<!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- TABS -->
     <div class="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
-      <!-- Tab buttons -->
       <div class="flex items-center gap-1 px-4 pt-4 pb-3 border-b border-gray-100">
         <button id="tab-all" onclick="setTab('all')" onmouseenter="previewTab('all')" onmouseleave="revertTab()" class="tab-active px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">All</button>
         <button id="tab-open" onclick="setTab('open')" onmouseenter="previewTab('open')" onmouseleave="revertTab()" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Open</button>
         <button id="tab-closed" onclick="setTab('closed')" onmouseenter="previewTab('closed')" onmouseleave="revertTab()" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Closed</button>
       </div>
 
-<!-- Issues meta row -->
-<div class="flex items-center justify-between px-5 py-3">
+      <div class="flex items-center justify-between px-5 py-3">
+        <div class="flex items-center gap-3">
+          <div class="p-1 rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.7)]">
+            <img src="assets/Aperture.png" alt="Aperture" class="w-5 h-5 object-cover rounded-full">
+          </div>
+          <div>
+            <span id="issueCount" class="font-bold text-gray-800 text-base">0 Issues</span>
+            <p class="text-xs text-gray-400">Track and manage your product issues</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1.5 text-gray-500">
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+            <span id="openCount">0</span> Open
+          </span>
+          <span class="flex items-center gap-1.5 text-gray-500">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span>
+            <span id="closedCount">0</span> Closed
+          </span>
+        </div>
+      </div>
 
-  <!-- Left side -->
-  <div class="flex items-center gap-3">
+      <!-- SPINNER -->
+      <div id="spinner" class="flex justify-center py-16 hidden">
+        <div class="spinner"></div>
+      </div>
 
-    <!-- Circle Image -->
-    <div class="p-1 rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.7)]">
-      <img src="assets/Aperture.png"
-           alt="Aperture"
-           class="w-5 h-5 object-cover rounded-full">
-    </div>
+      <!-- CARDS GRID -->
+      <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 hidden"></div>
 
-    <!-- Issues Text -->
-    <div>
-      <span id="issueCount" class="font-bold text-gray-800 text-base">0 Issues</span>
-      <p class="text-xs text-gray-400">Track and manage your product issues</p>
-    </div>
-
-  </div>
-
-  <!-- Right side status -->
-  <div class="flex items-center gap-3 text-sm">
-    <span class="flex items-center gap-1.5 text-gray-500">
-      <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
-      <span id="openCount">0</span> Open
-    </span>
-    <span class="flex items-center gap-1.5 text-gray-500">
-      <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span>
-      <span id="closedCount">0</span> Closed
-    </span>
-  </div>
-
-</div>
-
-    <!-- SPINNER -->
-    <div id="spinner" class="flex justify-center py-16 hidden">
-      <div class="spinner"></div>
-    </div>
-<!-- CARDS GRID -->
-<div id="cardsGrid"
-     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 hidden">
-</div>
       <!-- EMPTY STATE -->
-    <div id="emptyState" class="hidden text-center py-20 text-gray-400">
-      <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <p class="text-lg font-semibold">No issues found</p>
+      <div id="emptyState" class="hidden text-center py-20 text-gray-400">
+        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-lg font-semibold">No issues found</p>
+      </div>
     </div>
   </div>
 
@@ -151,33 +131,29 @@
   let currentTab = 'all';
   let oldTab = '';
   let isPreview = false;
-  
-   // ── Label styles ──
+
   const labelStyle = {
-    'bug':            'bg-red-200 text-red-500 border border-red-200',
-    'enhancement':    'bg-green-200 text-green-600 border border-green-200',
-    'help wanted':    'bg-yellow-200 text-yellow-600 border border-yellow-200',
-    'documentation':  'bg-blue-200 text-blue-500 border border-blue-200',
+    'bug':             'bg-red-200 text-red-500 border border-red-200',
+    'enhancement':     'bg-green-200 text-green-600 border border-green-200',
+    'help wanted':     'bg-yellow-200 text-yellow-600 border border-yellow-200',
+    'documentation':   'bg-blue-200 text-blue-500 border border-blue-200',
     'good first issue':'bg-green-100 text-green-600 border border-green-200',
   };
   const labelIcon = {
-    'bug': '😠', 'enhancement': '✨', 'help wanted': '🛠️',
+    'bug': '⚠️', 'enhancement': '✨', 'help wanted': '🛠️',
     'documentation': '📄', 'good first issue': '🌱',
   };
 
-  // ── Priority styles ── (consistent across card and modal)
   const priorityStyle = {
-    'high':   { border: 'bg-red-50 text-red-500 border border-red-200', bg: 'bg-red-500 text-white' },
+    'high':   { border: 'bg-red-50 text-red-500 border border-red-200',      bg: 'bg-red-500 text-white' },
     'medium': { border: 'bg-yellow-50 text-yellow-600 border border-yellow-200', bg: 'bg-yellow-400 text-white' },
-    'low':    { border: 'bg-gray-100 text-gray-500 border border-gray-200', bg: 'bg-gray-400 text-white' },
+    'low':    { border: 'bg-gray-100 text-gray-500 border border-gray-200',   bg: 'bg-gray-400 text-white' },
   };
 
-  // ── Check login status ──
   if (!localStorage.getItem('loggedIn')) {
     window.location.href = 'login.html';
   }
 
-  // ── Fetch all issues ──
   async function fetchIssues() {
     showSpinner(true);
     try {
@@ -196,16 +172,15 @@
   }
 
   function updateMarkers() {
-    const openNum = allIssues.filter(i => i.status.toLowerCase() === 'open').length;
+    const openNum   = allIssues.filter(i => i.status.toLowerCase() === 'open').length;
     const closedNum = allIssues.filter(i => i.status.toLowerCase() === 'closed').length;
-    document.getElementById('openCount').innerText = openNum;
+    document.getElementById('openCount').innerText   = openNum;
     document.getElementById('closedCount').innerText = closedNum;
   }
 
-  // ── Tab switch ──
   function setTab(tab) {
     currentTab = tab;
-    isPreview = false;
+    isPreview  = false;
     ['all','open','closed'].forEach(t => {
       const el = document.getElementById('tab-' + t);
       el.className = t === tab
@@ -231,18 +206,14 @@
     }
   }
 
- // ── Render cards ──
   function renderCards(issues) {
     const grid  = document.getElementById('cardsGrid');
     const empty = document.getElementById('emptyState');
     const count = document.getElementById('issueCount');
 
     let countText = `${issues.length} ${issues.length === 1 ? 'Issue' : 'Issues'}`;
-    if (currentTab === 'open') {
-      countText = `${issues.length} Open`;
-    } else if (currentTab === 'closed') {
-      countText = `${issues.length} Closed`;
-    }
+    if (currentTab === 'open')   countText = `${issues.length} Open`;
+    if (currentTab === 'closed') countText = `${issues.length} Closed`;
     count.textContent = countText;
 
     if (!issues.length) {
@@ -252,16 +223,18 @@
     }
     empty.classList.add('hidden');
     grid.classList.remove('hidden');
-
     grid.innerHTML = issues.map(issue => cardHTML(issue)).join('');
   }
 
   function cardHTML(issue) {
     const isOpen   = issue.status.toLowerCase() === 'open';
-    const border   = isOpen ? 'card-open' : 'card-closed';
+
+    
+    const border   = isOpen ? 'border-t-4 border-t-green-500' : 'border-t-4 border-t-purple-500';
+
     const iconBg   = isOpen ? 'bg-green-100' : 'bg-purple-100';
     const iconColor= isOpen ? 'text-green-500' : 'text-purple-500';
-    const desc     = issue.description.length > 70 ? issue.description.slice(0,70) + '...' : issue.description;
+    const desc     = issue.description.length > 70 ? issue.description.slice(0, 70) + '...' : issue.description;
     const date     = new Date(issue.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const priority = (issue.priority || 'low').toLowerCase();
     const pStyle   = priorityStyle[priority]?.border || priorityStyle['low'].border;
@@ -280,8 +253,8 @@
         <div class="flex items-start justify-between mb-3">
           <div class="${iconBg} ${iconColor} w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
             ${isOpen
-  ? '<img src="../assets/Open-Status.png" class="w-8 h-8 object-cover" alt="Open">'
-  : '<img src="../assets/Closed-Status.png" class="w-8 h-8 object-cover" alt="Closed">'}
+              ? '<img src="../assets/Open-Status.png" class="w-8 h-8 object-cover" alt="Open">'
+              : '<img src="../assets/Closed-Status.png" class="w-8 h-8 object-cover" alt="Closed">'}
           </div>
           <span class="text-xs font-bold px-3 py-1 rounded-full ${pStyle}">${priority.toUpperCase()}</span>
         </div>
@@ -296,7 +269,6 @@
     </div>`;
   }
 
-  // ── Modal ──
   async function openModal(id) {
     document.getElementById('modal').classList.remove('hidden');
     document.getElementById('modalContent').innerHTML = `<div class="flex justify-center py-8"><div class="spinner"></div></div>`;
@@ -317,12 +289,12 @@
       return;
     }
 
-    const isOpen   = issue.status.toLowerCase() === 'open';
+    const isOpen    = issue.status.toLowerCase() === 'open';
     const statusCls = isOpen ? 'bg-green-500 text-white' : 'bg-purple-500 text-white';
     const statusTxt = isOpen ? 'Opened' : 'Closed';
-    const date = new Date(issue.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    const priority = (issue.priority || 'low').toLowerCase();
-    const pStyle   = priorityStyle[priority]?.bg || priorityStyle['low'].bg;
+    const date      = new Date(issue.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const priority  = (issue.priority || 'low').toLowerCase();
+    const pStyle    = priorityStyle[priority]?.bg || priorityStyle['low'].bg;
 
     const labels = (issue.labels || []).map(l => {
       const labelKey = l.toLowerCase();
@@ -358,12 +330,10 @@
     document.getElementById('modal').classList.add('hidden');
   }
 
-  // Close modal on backdrop click
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  // ── Search ──
   let searchTimeout;
   function setupSearchListeners() {
     document.getElementById('searchInput').addEventListener('input', debounceSearch);
@@ -377,10 +347,7 @@
 
   async function doSearch() {
     const q = (document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value).trim();
-    if (!q) {
-      setTab(currentTab);
-      return;
-    }
+    if (!q) { setTab(currentTab); return; }
     showSpinner(true);
     try {
       const res  = await fetch(API_SEARCH + encodeURIComponent(q));
@@ -402,8 +369,8 @@
 
   function showSpinner(show) {
     const spinner = document.getElementById('spinner');
-    const grid = document.getElementById('cardsGrid');
-    const empty = document.getElementById('emptyState');
+    const grid    = document.getElementById('cardsGrid');
+    const empty   = document.getElementById('emptyState');
     spinner.classList.toggle('hidden', !show);
     if (show) {
       grid.classList.add('hidden');
@@ -415,10 +382,8 @@
     document.getElementById('mobileSearch').classList.toggle('hidden');
   }
 
-  // ── Init ──
   setupSearchListeners();
   fetchIssues();
 </script>
-
-  </body>
+</body>
 </html>
