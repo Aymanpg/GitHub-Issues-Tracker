@@ -73,9 +73,9 @@
     <div class="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
       <!-- Tab buttons -->
       <div class="flex items-center gap-1 px-4 pt-4 pb-3 border-b border-gray-100">
-        <button id="tab-all" onclick="setTab('all')" class="tab-active px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">All</button>
-        <button id="tab-open" onclick="setTab('open')" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Open</button>
-        <button id="tab-closed" onclick="setTab('closed')" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Closed</button>
+        <button id="tab-all" onclick="setTab('all')" onmouseenter="previewTab('all')" onmouseleave="revertTab()" class="tab-active px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">All</button>
+        <button id="tab-open" onclick="setTab('open')" onmouseenter="previewTab('open')" onmouseleave="revertTab()" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Open</button>
+        <button id="tab-closed" onclick="setTab('closed')" onmouseenter="previewTab('closed')" onmouseleave="revertTab()" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Closed</button>
       </div>
 
 <!-- Issues meta row -->
@@ -102,10 +102,12 @@
   <!-- Right side status -->
   <div class="flex items-center gap-3 text-sm">
     <span class="flex items-center gap-1.5 text-gray-500">
-      <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span> Open
+      <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+      <span id="openCount">0</span> Open
     </span>
     <span class="flex items-center gap-1.5 text-gray-500">
-      <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> Closed
+      <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span>
+      <span id="closedCount">0</span> Closed
     </span>
   </div>
 
@@ -147,24 +149,26 @@
 
   let allIssues = [];
   let currentTab = 'all';
+  let oldTab = '';
+  let isPreview = false;
   
    // ── Label styles ──
   const labelStyle = {
-    'bug':            'bg-red-50 text-red-500 border border-red-200',
-    'enhancement':    'bg-green-50 text-green-600 border border-green-200',
-    'help wanted':    'bg-yellow-50 text-yellow-600 border border-yellow-200',
-    'documentation':  'bg-blue-50 text-blue-500 border border-blue-200',
-    'good first issue':'bg-green-50 text-green-600 border border-green-200',
+    'bug':            'bg-red-200 text-red-500 border border-red-200',
+    'enhancement':    'bg-green-200 text-green-600 border border-green-200',
+    'help wanted':    'bg-yellow-200 text-yellow-600 border border-yellow-200',
+    'documentation':  'bg-blue-200 text-blue-500 border border-blue-200',
+    'good first issue':'bg-green-100 text-green-600 border border-green-200',
   };
   const labelIcon = {
-    'bug': '😠', 'enhancement': '✨', 'help wanted': '⚙️',
+    'bug': '😠', 'enhancement': '✨', 'help wanted': '🛠️',
     'documentation': '📄', 'good first issue': '🌱',
   };
 
   // ── Priority styles ── (consistent across card and modal)
   const priorityStyle = {
     'high':   { border: 'bg-red-50 text-red-500 border border-red-200', bg: 'bg-red-500 text-white' },
-    'medium': { border: 'bg-orange-50 text-orange-500 border border-orange-200', bg: 'bg-orange-400 text-white' },
+    'medium': { border: 'bg-yellow-50 text-yellow-600 border border-yellow-200', bg: 'bg-yellow-400 text-white' },
     'low':    { border: 'bg-gray-100 text-gray-500 border border-gray-200', bg: 'bg-gray-400 text-white' },
   };
 
@@ -186,13 +190,22 @@
       allIssues = [];
       alert('Failed to load issues. Please check your connection.');
     }
+    updateMarkers();
     setTab(currentTab);
     showSpinner(false);
+  }
+
+  function updateMarkers() {
+    const openNum = allIssues.filter(i => i.status.toLowerCase() === 'open').length;
+    const closedNum = allIssues.filter(i => i.status.toLowerCase() === 'closed').length;
+    document.getElementById('openCount').innerText = openNum;
+    document.getElementById('closedCount').innerText = closedNum;
   }
 
   // ── Tab switch ──
   function setTab(tab) {
     currentTab = tab;
+    isPreview = false;
     ['all','open','closed'].forEach(t => {
       const el = document.getElementById('tab-' + t);
       el.className = t === tab
@@ -202,13 +215,35 @@
     const filtered = tab === 'all' ? allIssues : allIssues.filter(i => i.status.toLowerCase() === tab);
     renderCards(filtered);
   }
+
+  function previewTab(tab) {
+    if (currentTab !== tab && !isPreview) {
+      oldTab = currentTab;
+      setTab(tab);
+      isPreview = true;
+    }
+  }
+
+  function revertTab() {
+    if (isPreview) {
+      setTab(oldTab);
+      isPreview = false;
+    }
+  }
+
  // ── Render cards ──
   function renderCards(issues) {
     const grid  = document.getElementById('cardsGrid');
     const empty = document.getElementById('emptyState');
     const count = document.getElementById('issueCount');
 
-    count.textContent = `${issues.length} ${issues.length === 1 ? 'Issue' : 'Issues'}`;
+    let countText = `${issues.length} ${issues.length === 1 ? 'Issue' : 'Issues'}`;
+    if (currentTab === 'open') {
+      countText = `${issues.length} Open`;
+    } else if (currentTab === 'closed') {
+      countText = `${issues.length} Closed`;
+    }
+    count.textContent = countText;
 
     if (!issues.length) {
       grid.classList.add('hidden');
