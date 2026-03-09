@@ -66,7 +66,57 @@
   </nav>
 
 
+<!-- MAIN CONTENT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
+    <!-- TABS -->
+    <div class="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
+      <!-- Tab buttons -->
+      <div class="flex items-center gap-1 px-4 pt-4 pb-3 border-b border-gray-100">
+        <button id="tab-all" onclick="setTab('all')" class="tab-active px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">All</button>
+        <button id="tab-open" onclick="setTab('open')" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Open</button>
+        <button id="tab-closed" onclick="setTab('closed')" class="tab-inactive px-5 py-1.5 rounded-lg text-sm font-semibold transition-all">Closed</button>
+      </div>
+
+<!-- Issues meta row -->
+<div class="flex items-center justify-between px-5 py-3">
+
+  <!-- Left side -->
+  <div class="flex items-center gap-3">
+
+    <!-- Circle Image -->
+    <div class="p-1 rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.7)]">
+      <img src="assets/Aperture.png"
+           alt="Aperture"
+           class="w-5 h-5 object-cover rounded-full">
+    </div>
+
+    <!-- Issues Text -->
+    <div>
+      <span id="issueCount" class="font-bold text-gray-800 text-base">0 Issues</span>
+      <p class="text-xs text-gray-400">Track and manage your product issues</p>
+    </div>
+
+  </div>
+
+  <!-- Right side status -->
+  <div class="flex items-center gap-3 text-sm">
+    <span class="flex items-center gap-1.5 text-gray-500">
+      <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span> Open
+    </span>
+    <span class="flex items-center gap-1.5 text-gray-500">
+      <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> Closed
+    </span>
+  </div>
+
+</div>
+
+    <!-- SPINNER -->
+    <div id="spinner" class="flex justify-center py-16 hidden">
+      <div class="spinner"></div>
+    </div>
+
+    
 
   </body>
 </html>
